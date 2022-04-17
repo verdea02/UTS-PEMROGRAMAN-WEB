@@ -1,57 +1,71 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Show Excel Data using PHP-AJAX ( Using PHP Spreadsheet )</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<!-- Setting the pages character encoding -->
+	<meta charset="UTF-8">
+
+	<!-- The meta viewport will scale my content to any device width -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Link to my stylesheet -->
+	<link rel="stylesheet" href="styles.css">
+	<title>Verdea Maulida Zahra_074</title>
 </head>
-
 <body>
-    <div class="container">
-        <br />
-        <h3 align="center">Membaca File Excel</h3>
-        <br />
-        <div class="table-responsive">
-            <span id="message"></span>
-            <form method="post" id="load_excel_data" enctype="multipart/form-data">
-                <table class="table">
-                    <tr>
-                        <td width="25%" align="right">Choose File</td>
-                        <td width="50%"><input type="file" id="select_excel" name="select_excel" /></td>
-                        <td width="25%"><input type="submit" id="load" name="load" class="btn btn-primary" /></td>
-                    </tr>
-                </table>
-            </form>
-            <br />
-            <table class="table" id="show_excel_data">
-                <!-- // Loading data  -->
 
-            </table>
-        </div>
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<h2>Data Jualan</h2>
+
+	<!-- Lets start with the table element -->
+	<table>
+		<!-- The first row is the tables header -->
+		<tr>
+			<th>Gambar</th>
+			<th>Nama</th>
+			<th>Harga</th>
+			<th>Ukuran</th>
+			<th>Contact</th>
+			<th>Warna</th>
+		</tr>
+
+		<!-- Next we will have the template which we will use inside
+	  		the loop and poplulate with the data from the json file. -->
+
+		<?php
+
+			$json_data = file_get_contents("products.json");
+			$products = json_decode($json_data, true);
+			if(count($products) != 0){
+				foreach ($products as $product) {
+					?>
+						<tr>
+							<td>
+								<img src="<?php echo $product['gambar']; ?>" alt="">
+							</td>
+							<td>
+								<?php echo $product['nama']; ?>
+							</td>
+							<td>
+								<?php echo $product['harga']; ?>;
+							</td>
+							<td>
+								<?php echo $product['ukuran']; ?>
+							</td>
+							<td>
+								<?php echo $product['contact']; ?>
+							</td>
+							<td>
+								<select name="warna" id="warna">
+									<option value="pilih warna">Pilih Warna</option>
+									<option value="merah">Merah</option>
+									<option value="kuning">Kuning</option>
+									<option value="hijau">Hijau</option>
+								</select>
+							</td>
+						</tr>
+					<?php
+				}
+			}
+		?>
+	</table>
 </body>
-
 </html>
-
-<script>
-$(document).ready(function() {
-    $('#load_excel_data').on('submit', function(event) {
-        event.preventDefault();
-        $.ajax({
-            url: "fetch_rquest.php",
-            method: "POST",
-            data: new FormData(this), // It automatically capture form data 
-            contentType: false, // contentType When sending data to the server, use this content type.
-            cache: false,
-            processData: false,
-            success: function(data) {
-                $('#show_excel_data').html(data);
-                $('table').css('width', '100%');
-            }
-        })
-    });
-});
-</script>
